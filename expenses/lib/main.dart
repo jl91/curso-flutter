@@ -7,7 +7,7 @@ import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'list/list-transactions.widget.ts.dart';
+import 'list/list-transactions.widget.dart';
 
 void main() => runApp(const Expenses());
 
