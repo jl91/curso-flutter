@@ -8,8 +8,11 @@ class TransactionModal extends StatelessWidget {
 
   void Function() onSubmit;
 
-  TransactionModal(
-      {super.key, required this.transactionForm, required this.onSubmit});
+  TransactionModal({
+    super.key,
+    required this.transactionForm,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +40,12 @@ class TransactionModal extends StatelessWidget {
                   TextField(
                     decoration: const InputDecoration(labelText: 'Título'),
                     controller: transactionForm.title,
+                    onSubmitted: (_) => onSubmit,
                   ),
                   TextField(
                     decoration: const InputDecoration(labelText: 'Valor R\$'),
                     controller: transactionForm.value,
+                    onSubmitted: (_) => onSubmit,
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [

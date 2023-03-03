@@ -30,6 +30,34 @@ class Expenses extends StatelessWidget {
 class _HomePageState extends State<HomePage> {
   TransactionForm form = TransactionForm();
 
+  _openTransactionModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (builderContext) {
+        return TransactionModal(
+          transactionForm: form,
+          onSubmit: () {
+            if (form.title.text.isEmpty || form.value.text.isEmpty) {
+              return;
+            }
+
+            setState(() {
+              final transaction = Transaction(
+                id: nextId,
+                title: form.title.text,
+                value: double.parse(form.value.text),
+                date: DateTime.now(),
+              );
+              _transactions.add(transaction);
+              form.reset();
+              Navigator.of(context).pop();
+            });
+          },
+        );
+      },
+    );
+  }
+
   final _transactions = [
     Transaction(
       id: 1,
@@ -51,6 +79,12 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
+  int get nextId {
+    return _transactions.last != null && _transactions.last.id > 0
+        ? _transactions.last.id + 1
+        : 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     var total = 0;
@@ -60,6 +94,12 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text("Expenses"),
           backgroundColor: Colors.purple,
+          actions: [
+            IconButton(
+              onPressed: () => _openTransactionModal(context),
+              icon: const Icon(Icons.add),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Container(
@@ -70,25 +110,16 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Chart(),
                 ListTransactions(transactions: _transactions),
-                TransactionModal(
-                  transactionForm: form,
-                  onSubmit: () {
-                    setState(() {
-                      final transaction = Transaction(
-                        id: _transactions.last.id + 1,
-                        title: form.title.text,
-                        value: double.parse(form.value.text),
-                        date: DateTime.now(),
-                      );
-                      _transactions.add(transaction);
-                      form.reset();
-                    });
-                  },
-                ),
               ],
             ),
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.purple,
+          child: const Icon(Icons.add),
+          onPressed: () => _openTransactionModal(context),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
